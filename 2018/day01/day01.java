@@ -13,12 +13,14 @@ public class day01 {
         while (first == null) {
             for (int f : frequencies) {
                 start += f;
-                Integer c = duplicates.get(start);
-                if (c == null) {
-                    duplicates.put(start, c = 1);
-                } else if (first == null) {
-                    first = start;
-                }               
+                if (first == null) {
+                    Integer c = duplicates.get(start);
+                    if (c == null) {
+                        duplicates.put(start, c = 1);
+                    } else {
+                        first = start;
+                    }               
+                }
             }
             if (count++ == 0) {
                 System.out.println("frequency="+start);
