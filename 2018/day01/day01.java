@@ -16,9 +16,8 @@ public class day01 {
                 Integer c = duplicates.get(start);
                 if (c == null) {
                     duplicates.put(start, c = 1);
-                } else {
+                } else if (first == null) {
                     first = start;
-                    break;
                 }               
             }
             if (count++ == 0) {
