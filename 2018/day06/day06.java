@@ -10,7 +10,7 @@ public class day06 {
         int x, y;
         Point neighbor;
         int id;
-        boolean visited;
+        int sum;
         
         Point(int id, int x, int y) {
             this.id = id;
@@ -90,6 +90,27 @@ public class day06 {
         return matrix;
     }
 
+    public static int calculateSums(List<Point> points, Point[][] matrix, int min) {
+        for (int r=0; r < matrix.length; r++) {
+            for (int c=0; c < matrix[0].length; c++) {
+                Point mp = matrix[r][c];
+                for (Point p : points) {
+                    mp.sum += mp.distance(p);
+                }
+            }
+        }
+        int area = 0;
+        for (int r=0; r < matrix.length; r++) {
+            for (int c=0; c < matrix[0].length; c++) {  
+                if (matrix[r][c].sum < min) {
+                    area++;
+                }
+            }
+        }
+
+        return area;
+    }
+
     public static int calculateArea(int id, Point[][] matrix) {
         int count = 0;
         for (int r = 0; r < matrix.length; r++) {
@@ -161,7 +182,6 @@ public class day06 {
         }
 
         System.out.println("max area: "+ calculateMaxArea(points, matrix));
+        System.out.println("region area: "+calculateSums(points, matrix, (args.length > 1) ? Integer.parseInt(args[1]) : 10000));
     }
 }
-
-    
