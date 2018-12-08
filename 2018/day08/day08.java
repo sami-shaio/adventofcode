@@ -2,10 +2,29 @@ import java.util.*;
 import java.io.*;
 
 public class day08 {
+    static class IntStream {
+        List<Integer> input;
+        int offset;
+
+        IntStream(List<Integer> input) {
+            this.input = input;
+        }
+
+        int read() throws IOException {
+            if (offset == input.size()) {
+                throw new IOException("Reached end of input");
+            }
+            return input.get(offset++);
+        }
+
+        void reset() {
+            offset = 0;
+        }
+    }
+
     static class Node {
         List<Node> children = new ArrayList<Node>();
         List<Integer> metadata = new ArrayList<Integer>();
-        int start;
 
         int sumMetadata() {
             int sum = 0;
@@ -57,7 +76,7 @@ public class day08 {
         }
     }
 
-    static List<Integer> getInput(String file) {
+    static IntStream getInput(String file) {
         List<Integer> list = new ArrayList<Integer>();
 
         try (BufferedReader r = new BufferedReader(new FileReader(file))) {
@@ -74,33 +93,28 @@ public class day08 {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-        return list;
+        return new IntStream(list);
     }
 
-    static Node readTree(List<Integer> input, int start) {
-        int nchild = input.get(start);
-        int nmeta = input.get(start+1);
+    static Node readTree(IntStream input) throws IOException {
+        int nchild = input.read();
+        int nmeta = input.read();
         Node r = new Node();
-        Node child = null;
 
-        r.start = start + 2;
         for (int i=0; i < nchild; i++) {
-            r.children.add(child = readTree(input, (i==0) ? r.start : child.start));
+            r.children.add(readTree(input));
         }
 
         for (int i=0; i < nmeta; i++) {
-            r.metadata.add(input.get((child == null) ? r.start+i : child.start+i));
+            r.metadata.add(input.read());
         }
         
-        r.start = (child == null) ? r.start+nmeta : child.start + nmeta;
-
         return r;
     }
 
-    public static void main(String args[]) {
-        List<Integer> input = getInput((args.length==0) ? "input.txt" : args[0]);
-        List<Integer> metadata = new ArrayList<Integer>();
-        Node root = readTree(input, 0);
+    public static void main(String args[]) throws Exception {
+        IntStream input = getInput((args.length==0) ? "input.txt" : args[0]);
+        Node root = readTree(input);
 
         //root.print(0);
         System.out.println(root.sumMetadata());
