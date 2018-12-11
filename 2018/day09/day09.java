@@ -1,5 +1,4 @@
-import java.util.*;
-import java.io.*;
+import java.math.BigInteger;
 
 public class day09 {
     static Link circle;
@@ -63,7 +62,7 @@ public class day09 {
 
     static class Player {
         int id;
-        int score;
+        BigInteger score = BigInteger.ZERO;
 
         Player(int id) {
             this.id = id;
@@ -76,7 +75,7 @@ public class day09 {
                     n = n.prev;
                 }
 
-                score += marble + n.value;
+                score = score.add(BigInteger.valueOf(((long)marble + n.value)));
                 current.current = false;
                 current = n.delete();
                 current.current = true;
@@ -89,18 +88,19 @@ public class day09 {
     }
 
     static void printHiScore(Player[] players, int hiscoreCheck) {
-        int max = 0;
+        BigInteger  max = BigInteger.ZERO;
         int id = 0;
         for (Player p : players) {
-            if (p.score > max) {
+            if (p.score.compareTo(max) == 1) {
                 max = p.score;
                 id = p.id;
+                
             }
         }
         if (hiscoreCheck == -1) {
             System.out.println("Player "+id+" hiscore="+max);
         } else {
-            System.out.println("Player "+id+" hiscore="+max+" "+(max == hiscoreCheck));
+            System.out.println("Player "+id+" hiscore="+max+" "+(max.compareTo(new BigInteger(Integer.toString(hiscoreCheck))) == 0));
         }
     }
 
