@@ -64,7 +64,6 @@ public class day09 {
     static class Player {
         int id;
         int score;
-        int mscore;
 
         Player(int id) {
             this.id = id;
@@ -77,8 +76,7 @@ public class day09 {
                     n = n.prev;
                 }
 
-                mscore = marble + n.value;
-                score += mscore;
+                score += marble + n.value;
                 current.current = false;
                 current = n.delete();
                 current.current = true;
@@ -108,7 +106,7 @@ public class day09 {
 
     public static void main(String args[]) {
         int nplayers = Integer.parseInt(args[0]);
-        int mpoints = Integer.parseInt(args[1]);
+        int lastMarble = Integer.parseInt(args[1]);
         int hiscore = (args.length > 2) ? Integer.parseInt(args[2]) : -1;
         Link circle = new Link(0);
         Link current = circle;
@@ -122,22 +120,13 @@ public class day09 {
         }
 
         int p = 0;
-        int mp = 0;
-
-        Player player = null;
-        int marble = 1;
-        do {
-            player = players[p];
-            current = player.play(marble++, current);
-            if (player.mscore == mpoints) {
-                printHiScore(players, hiscore);
-            } else if (player.mscore > mpoints) {
-                System.out.println("Exceeded last marble points "+player.mscore+" "+marble);
-                printHiScore(players, hiscore);
-                break;
-            }
+        for (int marble = 1; marble <= lastMarble; marble++) {
+            Player player = players[p];
+            current = player.play(marble, current);
             p = (p + 1) % players.length;
-        } while (player.mscore != mpoints);
+        }
+
+        printHiScore(players, hiscore);
     }
 }
     
